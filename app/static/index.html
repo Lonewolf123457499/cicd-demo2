@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Tic-Tac-Toe</title>
+    <meta name="description" content="A beautiful Tic-Tac-Toe game backed by a FastAPI engine. Developed with premium DevOps practices.">
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="background-decor">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <span class="logo-icon">✕</span>
+                <span class="logo-icon logo-o">◯</span>
+                <h1>Tic-Tac-Toe <span class="badge">API Edition</span></h1>
+            </div>
+            <p class="subtitle">Powered by FastAPI Backend Engine</p>
+        </header>
+
+        <main class="game-dashboard">
+            <!-- Settings panel -->
+            <section class="control-panel glass-card">
+                <h2>Game Settings</h2>
+                
+                <div class="setting-group">
+                    <label>Opponent Type</label>
+                    <div class="segmented-control" id="opponent-type">
+                        <button class="active" data-value="ai">FastAPI AI</button>
+                        <button data-value="local">Local Pass & Play</button>
+                    </div>
+                </div>
+
+                <div class="setting-group" id="difficulty-group">
+                    <label>AI Difficulty</label>
+                    <div class="segmented-control" id="difficulty">
+                        <button data-value="easy">Easy</button>
+                        <button data-value="medium">Medium</button>
+                        <button class="active" data-value="hard">Hard (Minimax)</button>
+                    </div>
+                </div>
+
+                <div class="scoreboard">
+                    <div class="score-card player-x">
+                        <span class="score-label">Player (X)</span>
+                        <span class="score-value" id="score-x">0</span>
+                    </div>
+                    <div class="score-card ties">
+                        <span class="score-label">Ties</span>
+                        <span class="score-value" id="score-ties">0</span>
+                    </div>
+                    <div class="score-card player-o">
+                        <span class="score-label" id="o-label">AI (O)</span>
+                        <span class="score-value" id="score-o">0</span>
+                    </div>
+                </div>
+
+                <button id="reset-scores-btn" class="secondary-btn">Reset Scoreboard</button>
+            </section>
+
+            <!-- Play Area -->
+            <section class="play-area">
+                <div class="status-bar glass-card" id="status-bar">
+                    <span id="status-text">Your turn (X)</span>
+                    <div class="spinner" id="thinking-indicator"></div>
+                </div>
+
+                <div class="board glass-card" id="board">
+                    <div class="cell" data-index="0"></div>
+                    <div class="cell" data-index="1"></div>
+                    <div class="cell" data-index="2"></div>
+                    <div class="cell" data-index="3"></div>
+                    <div class="cell" data-index="4"></div>
+                    <div class="cell" data-index="5"></div>
+                    <div class="cell" data-index="6"></div>
+                    <div class="cell" data-index="7"></div>
+                    <div class="cell" data-index="8"></div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="restart-btn" class="primary-btn">Restart Game</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <p>Designed for scalability and cloud deployment.</p>
+                <div class="api-status">
+                    <span class="status-dot pulsing" id="health-dot"></span>
+                    <span id="health-text">Connecting to API...</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Celebration Overlay -->
+    <div class="celebration-overlay" id="celebration-overlay">
+        <div class="celebration-content glass-card">
+            <h2 id="winner-title">Victory!</h2>
+            <p id="winner-subtitle">Player X dominates the grid.</p>
+            <button id="modal-restart-btn" class="primary-btn">Play Again</button>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
