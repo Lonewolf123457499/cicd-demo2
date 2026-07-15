@@ -126,3 +126,67 @@ jobs:
         run: |
           gcloud auth list
           gcloud config list
+  push-image:
+    name: Push Docker Image
+    needs: authenticate-gcp
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker Authentication
+        run: |
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/tic-tac-toe-devops/tic-tac-toe:${{ github.sha }} .
+
+      - name: Push Docker Image
+        run: |
+          docker push \
+            us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/tic-tac-toe-devops/tic-tac-toe:${{ github.sha }}
+
+  deploy-cloud-run:
+    name: Deploy to Cloud Run
+    needs: push-image
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy tic-tac-toe-devops \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/tic-tac-toe-devops/tic-tac-toe:${{ github.sha }} \
+            --region us-central1 \
+            --platform managed \
+            --allow-unauthenticated
