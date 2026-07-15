@@ -60,3 +60,19 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    docker-build:
+    name: Build Docker Image
+    needs: sonarqube
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: |
+          docker build -t tic-tac-toe:latest .
+
+      - name: Verify Docker Image
+        run: |
+          docker images
