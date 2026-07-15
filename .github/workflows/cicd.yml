@@ -77,3 +77,26 @@ jobs:
       - name: Verify Docker Image
         run: |
           docker images
+
+  container-scan:
+    name: Container Security Scan
+    needs: docker-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: |
+          docker build -t tic-tac-toe:latest .
+
+      - name: Scan Docker Image with Trivy
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: "tic-tac-toe:latest"
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
