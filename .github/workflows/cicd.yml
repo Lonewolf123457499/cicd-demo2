@@ -92,11 +92,6 @@ jobs:
           docker build -t tic-tac-toe:latest .
 
       - name: Scan Docker Image with Trivy
-        uses: aquasecurity/trivy-action@0.33.1
-        with:
-          image-ref: "tic-tac-toe:latest"
-          format: "table"
-          exit-code: "1"
-          ignore-unfixed: true
-          vuln-type: "os,library"
-          severity: "CRITICAL,HIGH"
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+          aquasec/trivy:0.53.0 image --severity CRITICAL,HIGH --exit-code 1 --no-progress tic-tac-toe:latest
