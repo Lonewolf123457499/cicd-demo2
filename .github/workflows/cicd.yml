@@ -60,7 +60,8 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    docker-build:
+
+  docker-build:
     name: Build Docker Image
     needs: sonarqube
     runs-on: ubuntu-latest
